@@ -7,4 +7,5 @@ class AppRouterConstants {
   static const calendar = 'calendar';
   static const focus = 'focus';
   static const profile = 'profile';
+  static const task = 'task';
 }

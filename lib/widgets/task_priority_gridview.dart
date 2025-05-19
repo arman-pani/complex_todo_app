@@ -15,13 +15,6 @@ class TaskPriorityGridview extends StatefulWidget {
 }
 
 class _TaskPriorityGridviewState extends State<TaskPriorityGridview> {
-  late int selectedPriority;
-  @override
-  void initState() {
-    super.initState();
-    selectedPriority = 1;
-  }
-
   @override
   Widget build(BuildContext context) {
     return GridView.builder(

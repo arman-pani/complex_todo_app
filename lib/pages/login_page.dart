@@ -4,6 +4,7 @@ import 'package:todo_app/constants/app_router_constants.dart';
 import 'package:todo_app/constants/image_constants.dart';
 import 'package:todo_app/constants/string_constants.dart';
 import 'package:todo_app/constants/theme_constants.dart';
+import 'package:todo_app/utils/prefs_methods.dart';
 import 'package:todo_app/utils/show_snackbar.dart';
 import 'package:todo_app/widgets/custom_app_bar.dart';
 import 'package:todo_app/widgets/custom_text_button2.dart';
@@ -26,10 +27,11 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void onLoginPressed() {
+  void onLoginPressed() async {
     final username = usernameController.text.trim();
     final password = passwordController.text.trim();
     if (username == 'arman' && password == '1234') {
+      await SharedPrefsMethods.setIsLogin(true);
       showSnackBar(context, 'Login Successfully!');
       context.pushNamed(AppRouterConstants.home);
     } else {

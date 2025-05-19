@@ -41,6 +41,12 @@ class TextstyleConstants {
     fontSize: 18,
     fontWeight: FontWeight.w400,
   );
+
+  static const TextStyle mediumText = TextStyle(
+    color: ColorConstants.hintTextColor2,
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+  );
 }
 
 class ColorConstants {

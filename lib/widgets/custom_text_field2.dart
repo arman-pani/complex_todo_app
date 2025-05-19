@@ -13,6 +13,7 @@ class CustomTextField2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      autofocus: false,
       cursorColor: Colors.white,
       controller: controller,
       style: TextstyleConstants.hintText.copyWith(color: Colors.white),

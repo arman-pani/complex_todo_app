@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/constants/theme_constants.dart';
 import 'package:todo_app/models/task_model.dart';
+import 'package:todo_app/utils/category_dialog.dart';
+import 'package:todo_app/utils/category_methods.dart';
 import 'package:todo_app/utils/helpers.dart';
+import 'package:todo_app/utils/task_methods.dart';
 import 'package:todo_app/utils/task_priority_dialog.dart';
 import 'package:todo_app/widgets/custom_text_field2.dart';
 
@@ -11,6 +14,7 @@ Future<void> showAddTaskModalSheet(BuildContext context) async {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
   int selectedPriority = 1;
+  int selectedCategory = 0;
 
   selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -38,9 +42,9 @@ Future<void> showAddTaskModalSheet(BuildContext context) async {
       date: selectedDate,
       time: selectedTime,
       priority: selectedPriority,
-      tag: 'University',
+      category: CategoryMethods().getAllCategories()[selectedCategory].name,
     );
-
+    TaskMethods().addTaskToLocalDB(newTask);
     Navigator.pop(context);
   }
 
@@ -89,8 +93,10 @@ Future<void> showAddTaskModalSheet(BuildContext context) async {
                     color: Colors.white,
                   ),
                   IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.tag_rounded),
+                    onPressed: () async {
+                      selectedCategory = await showCategoryDialog(context);
+                    },
+                    icon: Icon(Icons.category_rounded),
                     color: Colors.white,
                   ),
                   IconButton(

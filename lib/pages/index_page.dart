@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:todo_app/constants/app_router_constants.dart';
 import 'package:todo_app/constants/theme_constants.dart';
 import 'package:todo_app/utils/add_task_model_sheet.dart';
+import 'package:todo_app/utils/prefs_methods.dart';
 
 class IndexPage extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -24,7 +26,15 @@ class IndexPage extends StatelessWidget {
         leading: Icon(Icons.sort_outlined),
         centerTitle: true,
         actionsPadding: EdgeInsets.symmetric(horizontal: 20),
-        actions: [CircleAvatar(radius: 20, backgroundColor: Colors.white)],
+        actions: [
+          GestureDetector(
+            onTap: () async {
+              await SharedPrefsMethods.removeIsLogin();
+              context.goNamed(AppRouterConstants.login);
+            },
+            child: CircleAvatar(radius: 20, backgroundColor: Colors.white),
+          ),
+        ],
       ),
 
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
