@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:todo_app/constants/theme_constants.dart';
 
 class FilterDropDownButton extends StatelessWidget {
-  const FilterDropDownButton({super.key});
+  final String label;
+  const FilterDropDownButton({super.key, required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class FilterDropDownButton extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
 
         children: [
-          Text('Today', style: TextstyleConstants.underText),
+          Text(label, style: TextstyleConstants.underText),
           Icon(Icons.keyboard_arrow_down_outlined, color: Colors.white),
         ],
       ),

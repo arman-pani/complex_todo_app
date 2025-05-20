@@ -29,3 +29,32 @@ String formatTaskDateTime(DateTime date, TimeOfDay time) {
   final formattedTime = time.minute.toString().padLeft(2, '0');
   return '$dayLabel at ${time.hour}:${formattedTime}';
 }
+
+String weekdayToShortString(int weekday) {
+  const weekdays = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+  if (weekday < 1 || weekday > 7) {
+    throw ArgumentError('Weekday must be between 1 and 7');
+  }
+  return weekdays[weekday - 1];
+}
+
+String monthToString(int month) {
+  const months = [
+    'JANUARY',
+    'FEBRUARY',
+    'MARCH',
+    'APRIL',
+    'MAY',
+    'JUNE',
+    'JULY',
+    'AUGUST',
+    'SEPTEMBER',
+    'OCTOBER',
+    'NOVEMBER',
+    'DECEMBER',
+  ];
+  if (month < 1 || month > 12) {
+    throw ArgumentError('Month must be between 1 and 12');
+  }
+  return months[month - 1];
+}

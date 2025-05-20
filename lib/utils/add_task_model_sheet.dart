@@ -3,7 +3,6 @@ import 'package:todo_app/constants/theme_constants.dart';
 import 'package:todo_app/models/task_model.dart';
 import 'package:todo_app/utils/category_dialog.dart';
 import 'package:todo_app/utils/category_methods.dart';
-import 'package:todo_app/utils/helpers.dart';
 import 'package:todo_app/utils/task_methods.dart';
 import 'package:todo_app/utils/task_priority_dialog.dart';
 import 'package:todo_app/widgets/custom_text_field2.dart';
@@ -42,7 +41,7 @@ Future<void> showAddTaskModalSheet(BuildContext context) async {
       date: selectedDate,
       time: selectedTime,
       priority: selectedPriority,
-      category: CategoryMethods().getAllCategories()[selectedCategory].name,
+      category: CategoryMethods().getAllCategories()[selectedCategory],
     );
     TaskMethods().addTaskToLocalDB(newTask);
     Navigator.pop(context);
@@ -66,16 +65,17 @@ Future<void> showAddTaskModalSheet(BuildContext context) async {
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'Add Task',
                     style: TextstyleConstants.homePlaceHolderTitle,
                   ),
-                  Spacer(),
-                  Text(
-                    '${formatDateTimetoString(selectedDate)}, ${formatTimeOfDayToString(selectedTime)}',
-                    style: TextstyleConstants.homePlaceHolderTitle,
-                  ),
+                  // Spacer(),
+                  // Text(
+                  //   '${formatDateTimetoString(selectedDate)}, ${formatTimeOfDayToString(selectedTime)}',
+                  //   style: TextstyleConstants.homePlaceHolderTitle,
+                  // ),
                 ],
               ),
               CustomTextField2(hintText: 'Task', controller: taskController),

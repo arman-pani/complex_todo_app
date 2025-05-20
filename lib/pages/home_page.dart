@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
                   spacing: 10,
                   children: [
                     CustomSearchBar(),
-                    FilterDropDownButton(),
+                    FilterDropDownButton(label: 'Today'),
                     ListView.separated(
                       physics: NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.vertical,

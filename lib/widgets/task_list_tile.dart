@@ -65,15 +65,19 @@ class _TaskListTileState extends State<TaskListTile> {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: ColorConstants.purple,
+                color: widget.task.category.color,
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Row(
                 spacing: 5,
                 children: [
-                  Icon(Icons.cast_for_education, size: 14, color: Colors.white),
+                  Icon(
+                    widget.task.category.icon,
+                    size: 14,
+                    color: Colors.white,
+                  ),
                   Text(
-                    widget.task.category,
+                    widget.task.category.name,
                     style: TextstyleConstants.underText,
                   ),
                 ],

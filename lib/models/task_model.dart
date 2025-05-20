@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:todo_app/models/category_model.dart';
 import 'package:uuid/uuid.dart';
 
 part 'task_model.g.dart';
 
-@HiveType(typeId: 1)
+@HiveType(typeId: 5)
 class TaskModel {
   @HiveField(0)
   final String id;
@@ -25,7 +26,7 @@ class TaskModel {
   final int priority;
 
   @HiveField(6)
-  final String category;
+  final CategoryModel category;
 
   @HiveField(7)
   final bool isComplete;
@@ -48,7 +49,7 @@ class TaskModel {
     DateTime? date,
     TimeOfDay? time,
     int? priority,
-    String? category,
+    CategoryModel? category,
     bool? isComplete,
   }) {
     return TaskModel(

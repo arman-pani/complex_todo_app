@@ -23,4 +23,7 @@ class StringConstants {
   static const String homePlaceHolderTitle = 'What do you want to do today?';
 
   static const String homePlaceHolderSubTitle = 'Tap + to add your tasks';
+
+  static const String focusSubTitle =
+      'While your focus mode is on, all of your notifications will be off';
 }

@@ -7,7 +7,7 @@ import 'package:todo_app/utils/prefs_methods.dart';
 
 class IndexPage extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
-  const IndexPage({super.key, required this.navigationShell});
+  IndexPage({super.key, required this.navigationShell});
 
   void onBottomNavTap(int index) {
     navigationShell.goBranch(
@@ -16,25 +16,37 @@ class IndexPage extends StatelessWidget {
     );
   }
 
+  final appBarTitles = ['Home', 'Calendar', 'None', 'Focus', 'Profile'];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: navigationShell,
       appBar: AppBar(
-        title: Text('Home', style: TextstyleConstants.homePlaceHolderTitle),
-        leading: Icon(Icons.sort_outlined),
+        title: Text(
+          appBarTitles[navigationShell.currentIndex],
+          style: TextstyleConstants.homePlaceHolderTitle,
+        ),
+        leading: navigationShell.currentIndex == 0
+            ? Icon(Icons.sort_outlined)
+            : SizedBox(),
         centerTitle: true,
         actionsPadding: EdgeInsets.symmetric(horizontal: 20),
-        actions: [
-          GestureDetector(
-            onTap: () async {
-              await SharedPrefsMethods.removeIsLogin();
-              context.goNamed(AppRouterConstants.login);
-            },
-            child: CircleAvatar(radius: 20, backgroundColor: Colors.white),
-          ),
-        ],
+        actions: navigationShell.currentIndex == 0
+            ? [
+                GestureDetector(
+                  onTap: () async {
+                    await SharedPrefsMethods.removeIsLogin();
+                    context.goNamed(AppRouterConstants.login);
+                  },
+                  child: CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Colors.white,
+                  ),
+                ),
+              ]
+            : [],
       ),
 
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

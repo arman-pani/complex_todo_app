@@ -79,8 +79,8 @@ class _TaskPageState extends State<TaskPage> {
               taskInfoRow(
                 icon: Icons.tag_rounded,
                 title: 'Task Category:',
-                buttonText: task.category,
-                buttonIcon: Icons.abc_sharp, //changes
+                buttonText: task.category.name,
+                buttonIcon: task.category.icon, //changes
               ),
               taskInfoRow(
                 icon: Icons.flag_outlined,

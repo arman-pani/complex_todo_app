@@ -36,6 +36,12 @@ class TextstyleConstants {
     fontWeight: FontWeight.w400,
   );
 
+  static const TextStyle boldUnderText = TextStyle(
+    color: Colors.white,
+    fontSize: 12,
+    fontWeight: FontWeight.w700,
+  );
+
   static const TextStyle addTaskHintText = TextStyle(
     color: ColorConstants.hintTextColor2,
     fontSize: 18,
@@ -45,6 +51,12 @@ class TextstyleConstants {
   static const TextStyle mediumText = TextStyle(
     color: ColorConstants.hintTextColor2,
     fontSize: 14,
+    fontWeight: FontWeight.w400,
+  );
+
+  static const TextStyle smallText = TextStyle(
+    color: ColorConstants.grey1,
+    fontSize: 10,
     fontWeight: FontWeight.w400,
   );
 }

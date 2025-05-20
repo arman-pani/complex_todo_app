@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo_app/constants/app_router_constants.dart';
+import 'package:todo_app/pages/calendar_page.dart';
+import 'package:todo_app/pages/focus_page.dart';
 import 'package:todo_app/pages/home_page.dart';
 import 'package:todo_app/pages/index_page.dart';
 import 'package:todo_app/pages/login_page.dart';
@@ -13,6 +15,7 @@ GoRouter appRouter({required String initialLocation}) {
   final rootNavigatorKey = GlobalKey<NavigatorState>();
   final shellNavigatorHomeKey = GlobalKey<NavigatorState>();
   final shellNavigatorCalendarKey = GlobalKey<NavigatorState>();
+  final shellNavigatorNoneKey = GlobalKey<NavigatorState>();
   final shellNavigatorFocusKey = GlobalKey<NavigatorState>();
   final shellNavigatorProfileKey = GlobalKey<NavigatorState>();
   return GoRouter(
@@ -69,7 +72,18 @@ GoRouter appRouter({required String initialLocation}) {
               GoRoute(
                 path: '/calendar',
                 name: AppRouterConstants.calendar,
-                builder: (context, state) => const HomePage(),
+                builder: (context, state) => const CalendarPage(),
+              ),
+            ],
+          ),
+
+          StatefulShellBranch(
+            navigatorKey: shellNavigatorNoneKey,
+            routes: [
+              GoRoute(
+                path: '/none',
+                name: 'none',
+                builder: (context, state) => const FocusPage(),
               ),
             ],
           ),
@@ -79,7 +93,7 @@ GoRouter appRouter({required String initialLocation}) {
               GoRoute(
                 path: '/focus',
                 name: AppRouterConstants.focus,
-                builder: (context, state) => const HomePage(),
+                builder: (context, state) => const FocusPage(),
               ),
             ],
           ),
