@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:todo_app/constants/theme_constants.dart';
+import 'package:todo_app/controllers/task_controller.dart';
 import 'package:todo_app/models/task_model.dart';
 import 'package:todo_app/utils/category_dialog.dart';
 import 'package:todo_app/utils/category_methods.dart';
-import 'package:todo_app/utils/task_methods.dart';
 import 'package:todo_app/utils/task_priority_dialog.dart';
 import 'package:todo_app/widgets/custom_text_field2.dart';
 
 Future<void> showAddTaskModalSheet(BuildContext context) async {
-  final taskController = TextEditingController();
+  final TaskController taskController = Get.find<TaskController>();
+  final taskTextController = TextEditingController();
   final descriptionController = TextEditingController();
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
@@ -36,14 +38,14 @@ Future<void> showAddTaskModalSheet(BuildContext context) async {
 
   void saveTaskButton() {
     final newTask = TaskModel(
-      title: taskController.text.trim(),
+      title: taskTextController.text.trim(),
       description: descriptionController.text.trim(),
       date: selectedDate,
       time: selectedTime,
       priority: selectedPriority,
       category: CategoryMethods().getAllCategories()[selectedCategory],
     );
-    TaskMethods().addTaskToLocalDB(newTask);
+    taskController.addTask(newTask);
     Navigator.pop(context);
   }
 
@@ -78,7 +80,10 @@ Future<void> showAddTaskModalSheet(BuildContext context) async {
                   // ),
                 ],
               ),
-              CustomTextField2(hintText: 'Task', controller: taskController),
+              CustomTextField2(
+                hintText: 'Task',
+                controller: taskTextController,
+              ),
               CustomTextField2(
                 hintText: 'Description',
                 controller: descriptionController,

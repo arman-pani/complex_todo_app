@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:todo_app/controllers/task_controller.dart';
 import 'package:todo_app/models/category_model.dart';
 import 'package:todo_app/models/task_model.dart';
 import 'package:todo_app/models/timeofday_adapter.dart';
@@ -19,20 +22,24 @@ void main() async {
   Hive.registerAdapter(CategoryModelAdapter());
   Hive.registerAdapter(TimeOfDayAdapter());
 
-  await Hive.openBox<TaskModel>('tasks');
+  final taskBox = await Hive.openBox<TaskModel>('tasks');
   await Hive.openBox<CategoryModel>('categories');
   CategoryMethods().initializeCategoryBox();
 
-  runApp(MyApp(isLogin: isLogin ?? false));
+  runApp(MyApp(isLogin: isLogin ?? false, taskBox: taskBox));
 }
 
 class MyApp extends StatelessWidget {
   final bool isLogin;
-  const MyApp({super.key, required this.isLogin});
+  final Box<TaskModel> taskBox;
+  const MyApp({super.key, required this.isLogin, required this.taskBox});
+
+  GoRouter getAppRouter() =>
+      appRouter(initialLocation: isLogin ? '/home' : '/onboard');
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
+    return GetMaterialApp.router(
       title: 'ToDo App',
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
@@ -42,7 +49,12 @@ class MyApp extends StatelessWidget {
         ),
       ),
 
-      routerConfig: appRouter(initialLocation: isLogin ? '/home' : '/onboard'),
+      routerDelegate: getAppRouter().routerDelegate,
+      routeInformationParser: getAppRouter().routeInformationParser,
+      routeInformationProvider: getAppRouter().routeInformationProvider,
+      initialBinding: BindingsBuilder(() {
+        Get.put(TaskController(taskBox));
+      }),
     );
   }
 }

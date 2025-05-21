@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:get/get.dart';
 import 'package:todo_app/constants/theme_constants.dart';
-import 'package:todo_app/models/task_model.dart';
+import 'package:todo_app/controllers/task_controller.dart';
 import 'package:todo_app/widgets/calendar_toggle_button.dart';
 import 'package:todo_app/widgets/day_wise_timeline.dart';
 import 'package:todo_app/widgets/task_list_tile.dart';
@@ -16,9 +16,23 @@ class CalendarPage extends StatefulWidget {
 class _CalendarPageState extends State<CalendarPage> {
   DateTime selectedDateTime = DateTime.now();
   bool showCompleted = false;
+  final TaskController taskController = Get.find<TaskController>();
 
   @override
   Widget build(BuildContext context) {
+    final tasks = taskController.tasks.values;
+    final filteredTasks = tasks.where((task) {
+      final isSameDate =
+          task.date.year == selectedDateTime.year &&
+          task.date.month == selectedDateTime.month &&
+          task.date.day == selectedDateTime.day;
+
+      final isCompletedMatch = showCompleted
+          ? task.isComplete
+          : !task.isComplete;
+
+      return isSameDate && isCompletedMatch;
+    }).toList();
     return Column(
       spacing: 20,
       children: [
@@ -40,55 +54,35 @@ class _CalendarPageState extends State<CalendarPage> {
           },
         ),
 
-        ValueListenableBuilder(
-          valueListenable: Hive.box<TaskModel>('tasks').listenable(),
-          builder: (context, Box<TaskModel> box, child) {
-            final tasks = box.values.where((task) {
-              final isSameDate =
-                  task.date.year == selectedDateTime.year &&
-                  task.date.month == selectedDateTime.month &&
-                  task.date.day == selectedDateTime.day;
-
-              final isCompletedMatch = showCompleted
-                  ? task.isComplete
-                  : !task.isComplete;
-
-              return isSameDate && isCompletedMatch;
-            }).toList();
-
-            return tasks.isEmpty
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      SizedBox(height: 50),
-                      Icon(
-                        Icons.task_alt_rounded,
-                        color: Colors.white,
-                        size: 60,
-                      ),
-                      Text(
-                        'No Tasks Found',
-                        style: TextstyleConstants.homePlaceHolderTitle,
-                      ),
-                    ],
-                  )
-                : Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: ListView.separated(
-                      itemCount: tasks.length,
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      itemBuilder: (context, index) {
-                        return TaskListTile(task: tasks[index]);
-                      },
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(height: 10),
+        Obx(
+          () => filteredTasks.isEmpty
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    SizedBox(height: 50),
+                    Icon(Icons.task_alt_rounded, color: Colors.white, size: 60),
+                    Text(
+                      'No Tasks Found',
+                      style: TextstyleConstants.homePlaceHolderTitle,
                     ),
-                  );
-          },
+                  ],
+                )
+              : Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ListView.separated(
+                    itemCount: filteredTasks.length,
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    itemBuilder: (context, index) {
+                      return TaskListTile(taskId: filteredTasks[index].id);
+                    },
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 10),
+                  ),
+                ),
         ),
       ],
     );

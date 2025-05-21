@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:todo_app/constants/theme_constants.dart';
+import 'package:todo_app/controllers/task_controller.dart';
 import 'package:todo_app/models/task_model.dart';
 import 'package:todo_app/utils/helpers.dart';
 import 'package:todo_app/utils/task_edit_dialogs.dart';
-import 'package:todo_app/utils/task_methods.dart';
+import 'package:todo_app/widgets/radio_button.dart';
 
 class TaskPage extends StatefulWidget {
   final String taskId;
@@ -15,17 +17,13 @@ class TaskPage extends StatefulWidget {
 
 class _TaskPageState extends State<TaskPage> {
   late TaskModel task;
+  final TaskController taskController = Get.find<TaskController>();
+  late TaskEditDialogs taskEditDialogs = TaskEditDialogs(taskController);
 
   @override
   void initState() {
     super.initState();
-    task = TaskMethods().getTaskInfoById(widget.taskId)!;
-  }
-
-  void refreshTask() {
-    setState(() {
-      task = TaskMethods().getTaskInfoById(widget.taskId)!;
-    });
+    task = taskController.tasks[widget.taskId]!;
   }
 
   @override
@@ -55,18 +53,9 @@ class _TaskPageState extends State<TaskPage> {
 
               ListTile(
                 titleAlignment: ListTileTitleAlignment.top,
-                leading: Radio<bool>(
-                  toggleable: true,
-                  visualDensity: VisualDensity.compact,
-                  fillColor: WidgetStatePropertyAll(Colors.white),
-                  value: true,
+                leading: TaskRadioButton(
                   groupValue: task.isComplete,
-                  onChanged: (value) {
-                    setState(() {
-                      TaskMethods().toggleTaskCompletion(task.id);
-                      debugPrint("Task: ${task.toString()}");
-                    });
-                  },
+                  taskId: widget.taskId,
                 ),
                 title: Text(
                   task.title,
@@ -79,8 +68,11 @@ class _TaskPageState extends State<TaskPage> {
 
                 trailing: IconButton(
                   onPressed: () async {
-                    await showEditTaskTitleDescriptionDialog(context, task);
-                    refreshTask();
+                    await taskEditDialogs.showEditTaskTitleDescriptionDialog(
+                      context,
+
+                      task,
+                    );
                   },
                   icon: Icon(Icons.edit_rounded, color: Colors.white),
                 ),
@@ -98,8 +90,10 @@ class _TaskPageState extends State<TaskPage> {
                 buttonText: task.category.name,
                 buttonIcon: task.category.icon,
                 onTap: () async {
-                  await showEditTaskCategoryDialog(context, task);
-                  refreshTask();
+                  await taskEditDialogs.showEditTaskCategoryDialog(
+                    context,
+                    task,
+                  );
                 },
               ),
               taskInfoRow(
@@ -107,8 +101,10 @@ class _TaskPageState extends State<TaskPage> {
                 title: 'Task Priority:',
                 buttonText: task.priority.toString(),
                 onTap: () async {
-                  await showEditTaskPriorityDialog(context, task);
-                  refreshTask();
+                  await taskEditDialogs.showEditTaskPriorityDialog(
+                    context,
+                    task,
+                  );
                 },
               ),
               taskInfoRow(
@@ -119,7 +115,10 @@ class _TaskPageState extends State<TaskPage> {
               ),
 
               ListTile(
-                onTap: () => showDeleteTaskDialog(context: context, task: task),
+                onTap: () => taskEditDialogs.showDeleteTaskDialog(
+                  context: context,
+                  task: task,
+                ),
                 contentPadding: EdgeInsets.symmetric(
                   vertical: 0,
                   horizontal: 20,

@@ -45,6 +45,7 @@ dependencies:
   easy_date_timeline: ^2.0.9
   fl_chart: ^1.0.0
   image_picker: ^1.1.2
+  get: ^4.7.2
 
 dev_dependencies:
   flutter_test:
