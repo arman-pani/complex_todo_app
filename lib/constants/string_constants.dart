@@ -26,4 +26,33 @@ class StringConstants {
 
   static const String focusSubTitle =
       'While your focus mode is on, all of your notifications will be off';
+
+  static const String profileLabel1 = 'App settings';
+
+  static const String profileLabel2 = 'Change account name';
+  static const String profileLabel3 = 'Change account password';
+  static const String profileLabel4 = 'Change account Image';
+
+  static const String profileLabel5 = 'About Us';
+  static const String profileLabel6 = 'FAQ';
+  static const String profileLabel7 = 'Help & Feedback';
+  static const String profileLabel8 = 'Support Us';
+  static const String profileLabel9 = 'Log out';
+
+  static const String accountImageButtonLabel1 = 'Take picture';
+  static const String accountImageButtonLabel2 = 'Import from gallery';
+  static const String accountImageButtonLabel3 = 'Import from Google Drive';
+
+  static const String settingsLabel1 = 'Change app color';
+  static const String settingsLabel2 = 'Change app typography';
+  static const String settingsLabel3 = 'Change app language';
+  static const String settingsLabel4 = 'Import from Google calendar';
+
+  static const String editTaskDialogTitle1 = 'Edit Task Title';
+  static const String editTaskDialogTitle2 = 'Edit Task Category';
+  static const String editTaskDialogTitle3 = 'Edit Task Priority';
+
+  static const String deleteTaskDialogTitle = 'Delete Task';
+  static String deleteTaskDialogSubTitle(String taskTitle) =>
+      'Are You sure you want to delete this task? Task title : $taskTitle';
 }

@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:todo_app/constants/app_router_constants.dart';
 import 'package:todo_app/constants/theme_constants.dart';
 import 'package:todo_app/utils/add_task_model_sheet.dart';
-import 'package:todo_app/utils/prefs_methods.dart';
+import 'package:todo_app/widgets/fab_bottom_nav_bar.dart';
 
 class IndexPage extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -16,7 +16,7 @@ class IndexPage extends StatelessWidget {
     );
   }
 
-  final appBarTitles = ['Home', 'Calendar', 'None', 'Focus', 'Profile'];
+  final appBarTitles = ['Home', 'Calendar', 'Focus', 'Profile'];
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +36,7 @@ class IndexPage extends StatelessWidget {
         actions: navigationShell.currentIndex == 0
             ? [
                 GestureDetector(
-                  onTap: () async {
-                    await SharedPrefsMethods.removeIsLogin();
-                    context.goNamed(AppRouterConstants.login);
-                  },
+                  onTap: () => context.goNamed(AppRouterConstants.profile),
                   child: CircleAvatar(
                     radius: 20,
                     backgroundColor: Colors.white,
@@ -59,29 +56,14 @@ class IndexPage extends StatelessWidget {
           await showAddTaskModalSheet(context);
         },
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: onBottomNavTap,
-        currentIndex: navigationShell.currentIndex,
-        backgroundColor: ColorConstants.appBarBgColor,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: ColorConstants.grey1,
-        type: BottomNavigationBarType.fixed,
+      bottomNavigationBar: FABBottomNavBar(
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_month),
-            label: 'Calendar',
-          ),
-          BottomNavigationBarItem(icon: SizedBox(), label: ''),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.access_time_outlined),
-            label: 'Focus',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'Profile',
-          ),
+          FABBottomNavBarItem(icon: Icons.home_filled, label: 'Home'),
+          FABBottomNavBarItem(icon: Icons.calendar_month, label: 'Calendar'),
+          FABBottomNavBarItem(icon: Icons.access_time_outlined, label: 'Focus'),
+          FABBottomNavBarItem(icon: Icons.person_outline, label: 'Profile'),
         ],
+        onTabSelected: onBottomNavTap,
       ),
     );
   }

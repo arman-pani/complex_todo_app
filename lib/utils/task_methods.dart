@@ -19,6 +19,10 @@ class TaskMethods {
     }
   }
 
+  void updateTaskInLocalDB(TaskModel newTask, String taskId) {
+    tasksBox.put(taskId, newTask);
+  }
+
   TaskModel? getTaskInfoById(String taskId) {
     return tasksBox.get(taskId);
   }

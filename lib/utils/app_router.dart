@@ -7,6 +7,8 @@ import 'package:todo_app/pages/home_page.dart';
 import 'package:todo_app/pages/index_page.dart';
 import 'package:todo_app/pages/login_page.dart';
 import 'package:todo_app/pages/onboarding_page.dart';
+import 'package:todo_app/pages/profile_page.dart';
+import 'package:todo_app/pages/settings_page.dart';
 import 'package:todo_app/pages/splash_page.dart';
 import 'package:todo_app/pages/start_page.dart';
 import 'package:todo_app/pages/task_page.dart';
@@ -15,7 +17,6 @@ GoRouter appRouter({required String initialLocation}) {
   final rootNavigatorKey = GlobalKey<NavigatorState>();
   final shellNavigatorHomeKey = GlobalKey<NavigatorState>();
   final shellNavigatorCalendarKey = GlobalKey<NavigatorState>();
-  final shellNavigatorNoneKey = GlobalKey<NavigatorState>();
   final shellNavigatorFocusKey = GlobalKey<NavigatorState>();
   final shellNavigatorProfileKey = GlobalKey<NavigatorState>();
   return GoRouter(
@@ -52,6 +53,13 @@ GoRouter appRouter({required String initialLocation}) {
             TaskPage(taskId: state.pathParameters['taskId']!),
       ),
 
+      GoRoute(
+        parentNavigatorKey: rootNavigatorKey,
+        path: '/settings',
+        name: AppRouterConstants.settings,
+        builder: (context, state) => const SettingsPage(),
+      ),
+
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>
             IndexPage(navigationShell: navigationShell),
@@ -78,16 +86,6 @@ GoRouter appRouter({required String initialLocation}) {
           ),
 
           StatefulShellBranch(
-            navigatorKey: shellNavigatorNoneKey,
-            routes: [
-              GoRoute(
-                path: '/none',
-                name: 'none',
-                builder: (context, state) => const FocusPage(),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
             navigatorKey: shellNavigatorFocusKey,
             routes: [
               GoRoute(
@@ -103,7 +101,7 @@ GoRouter appRouter({required String initialLocation}) {
               GoRoute(
                 path: '/profile',
                 name: AppRouterConstants.profile,
-                builder: (context, state) => const HomePage(),
+                builder: (context, state) => const ProfilePage(),
               ),
             ],
           ),

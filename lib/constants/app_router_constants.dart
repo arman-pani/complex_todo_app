@@ -8,4 +8,5 @@ class AppRouterConstants {
   static const focus = 'focus';
   static const profile = 'profile';
   static const task = 'task';
+  static const settings = 'settings';
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:todo_app/constants/theme_constants.dart';
 import 'package:todo_app/models/task_model.dart';
 import 'package:todo_app/utils/helpers.dart';
+import 'package:todo_app/utils/task_edit_dialogs.dart';
 import 'package:todo_app/utils/task_methods.dart';
 
 class TaskPage extends StatefulWidget {
@@ -14,10 +14,22 @@ class TaskPage extends StatefulWidget {
 }
 
 class _TaskPageState extends State<TaskPage> {
+  late TaskModel task;
+
+  @override
+  void initState() {
+    super.initState();
+    task = TaskMethods().getTaskInfoById(widget.taskId)!;
+  }
+
+  void refreshTask() {
+    setState(() {
+      task = TaskMethods().getTaskInfoById(widget.taskId)!;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final TaskModel task = TaskMethods().getTaskInfoById(widget.taskId)!;
-
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -66,7 +78,10 @@ class _TaskPageState extends State<TaskPage> {
                 ),
 
                 trailing: IconButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    await showEditTaskTitleDescriptionDialog(context, task);
+                    refreshTask();
+                  },
                   icon: Icon(Icons.edit_rounded, color: Colors.white),
                 ),
               ),
@@ -75,29 +90,36 @@ class _TaskPageState extends State<TaskPage> {
                 icon: Icons.timer_outlined,
                 title: 'Task Time:',
                 buttonText: formatTaskDateTime(task.date, task.time),
+                onTap: () {},
               ),
               taskInfoRow(
                 icon: Icons.tag_rounded,
                 title: 'Task Category:',
                 buttonText: task.category.name,
-                buttonIcon: task.category.icon, //changes
+                buttonIcon: task.category.icon,
+                onTap: () async {
+                  await showEditTaskCategoryDialog(context, task);
+                  refreshTask();
+                },
               ),
               taskInfoRow(
                 icon: Icons.flag_outlined,
                 title: 'Task Priority:',
                 buttonText: task.priority.toString(),
+                onTap: () async {
+                  await showEditTaskPriorityDialog(context, task);
+                  refreshTask();
+                },
               ),
               taskInfoRow(
                 icon: Icons.roundabout_left,
                 title: 'Sub - Task',
                 buttonText: 'Add Sub - Task',
+                onTap: () {},
               ),
 
               ListTile(
-                onTap: () {
-                  TaskMethods().removeTaskFromLocalDB(widget.taskId);
-                  context.pop();
-                },
+                onTap: () => showDeleteTaskDialog(context: context, task: task),
                 contentPadding: EdgeInsets.symmetric(
                   vertical: 0,
                   horizontal: 20,
@@ -121,6 +143,7 @@ class _TaskPageState extends State<TaskPage> {
     required IconData icon,
     required String title,
     required String buttonText,
+    required VoidCallback onTap,
     IconData? buttonIcon,
   }) {
     return Padding(
@@ -131,20 +154,23 @@ class _TaskPageState extends State<TaskPage> {
           SizedBox(width: 10),
           Text(title, style: TextstyleConstants.buttonText),
           Spacer(),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: ColorConstants.grey1,
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: Row(
-              spacing: 10,
-              children: [
-                if (buttonIcon != null)
-                  Icon(buttonIcon, color: Colors.white, size: 24),
-                Text(buttonText, style: TextstyleConstants.underText),
-              ],
+          GestureDetector(
+            onTap: onTap,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: ColorConstants.grey1,
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: Row(
+                spacing: 10,
+                children: [
+                  if (buttonIcon != null)
+                    Icon(buttonIcon, color: Colors.white, size: 24),
+                  Text(buttonText, style: TextstyleConstants.underText),
+                ],
+              ),
             ),
           ),
         ],
