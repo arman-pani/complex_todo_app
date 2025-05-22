@@ -55,4 +55,15 @@ class StringConstants {
   static const String deleteTaskDialogTitle = 'Delete Task';
   static String deleteTaskDialogSubTitle(String taskTitle) =>
       'Are You sure you want to delete this task? Task title : $taskTitle';
+
+  static const String addCategoryPageTitle = 'Create new category';
+
+  static const String addCategoryPageSubTitle1 = 'Category name:';
+  static const String addCategoryPageSubTitle2 = 'Category icon:';
+  static const String addCategoryPageSubTitle3 = 'Category color:';
+
+  static const String addCategoryPageHintText1 = 'Enter Category name';
+
+  static const String addCategoryLabel1 = 'Choose icon from library';
+  static const String addCategoryLabel2 = 'Create Category';
 }

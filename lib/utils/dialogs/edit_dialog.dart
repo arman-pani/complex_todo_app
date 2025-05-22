@@ -22,9 +22,7 @@ Future<void> showEditDialog({
             children: [
               Text(title, style: TextstyleConstants.homePlaceHolderTitle),
               Divider(color: Colors.white, thickness: 1),
-
               ...items,
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

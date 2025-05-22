@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo_app/constants/app_router_constants.dart';
+import 'package:todo_app/pages/add_category_page.dart';
 import 'package:todo_app/pages/calendar_page.dart';
 import 'package:todo_app/pages/focus_page.dart';
 import 'package:todo_app/pages/home_page.dart';
@@ -51,6 +52,13 @@ GoRouter appRouter({required String initialLocation}) {
         name: AppRouterConstants.task,
         builder: (context, state) =>
             TaskPage(taskId: state.pathParameters['taskId']!),
+      ),
+
+      GoRoute(
+        parentNavigatorKey: rootNavigatorKey,
+        path: '/add-category',
+        name: AppRouterConstants.addCategory,
+        builder: (context, state) => const AddCategoryPage(),
       ),
 
       GoRoute(

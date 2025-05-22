@@ -9,4 +9,5 @@ class AppRouterConstants {
   static const profile = 'profile';
   static const task = 'task';
   static const settings = 'settings';
+  static const addCategory = 'add-category';
 }

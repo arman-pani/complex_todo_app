@@ -1,22 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
+import 'package:todo_app/constants/app_constants.dart';
+import 'package:todo_app/constants/string_constants.dart';
 import 'package:todo_app/constants/theme_constants.dart';
+import 'package:todo_app/controllers/category_controller.dart';
 import 'package:todo_app/models/category_model.dart';
-import 'package:todo_app/utils/category_methods.dart';
+import 'package:todo_app/utils/show_snackbar.dart';
 import 'package:todo_app/widgets/custom_text_field.dart';
 import 'package:todo_app/widgets/dialog_button.dart';
-
-final List<Color> categoryColors = [
-  Colors.red,
-  Colors.blue,
-  Colors.green,
-  Colors.orange,
-  Colors.purple,
-  Colors.yellow,
-  Colors.pink,
-  Colors.teal,
-  Colors.brown,
-  Colors.cyan,
-];
 
 class AddCategoryPage extends StatefulWidget {
   const AddCategoryPage({super.key});
@@ -26,19 +18,24 @@ class AddCategoryPage extends StatefulWidget {
 }
 
 class _AddCategoryPageState extends State<AddCategoryPage> {
-  final TextEditingController categoryController = TextEditingController();
+  final TextEditingController categoryInputController = TextEditingController();
   final IconData categoryIcon = Icons.abc_rounded;
   int selectedColorIndex = 0;
 
-  void onCreateCategoryPressed() {
-    Navigator.pop(context);
-    final newCategory = CategoryModel(
-      name: categoryController.text.trim(),
-      iconCodePoint: Icons.abc.codePoint,
-      colorValue: categoryColors[selectedColorIndex].value,
-    );
+  final CategoryController categoryController = Get.find<CategoryController>();
 
-    CategoryMethods().addCategoryToLocalDB(newCategory);
+  void onCreateCategoryPressed() {
+    if (categoryInputController.text.trim() != '') {
+      final newCategory = CategoryModel(
+        name: categoryInputController.text.trim(),
+        iconCodePoint: Icons.abc.codePoint,
+        colorValue: categoryColors[selectedColorIndex].value,
+      );
+      categoryController.addCategory(newCategory);
+      context.pop();
+    } else {
+      showSnackBar(context, 'Category Name field is empty!');
+    }
   }
 
   @override
@@ -52,17 +49,20 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Create new category',
+                StringConstants.addCategoryPageTitle,
                 style: TextstyleConstants.homePlaceHolderTitle,
               ),
               SizedBox(height: 30),
               CustomTextField(
-                hintText: 'Enter Category name',
-                labelText: 'Category name:',
-                controller: categoryController,
+                hintText: StringConstants.addCategoryPageHintText1,
+                labelText: StringConstants.addCategoryPageSubTitle1,
+                controller: categoryInputController,
               ),
               SizedBox(height: 20),
-              Text('Category icon:', style: TextstyleConstants.buttonText),
+              Text(
+                StringConstants.addCategoryPageSubTitle2,
+                style: TextstyleConstants.buttonText,
+              ),
               SizedBox(height: 10),
               TextButton(
                 onPressed: () {},
@@ -78,12 +78,15 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
                   ),
                 ),
                 child: Text(
-                  'Choose icon from library',
+                  StringConstants.addCategoryLabel1,
                   style: TextstyleConstants.buttonText,
                 ),
               ),
               SizedBox(height: 20),
-              Text('Category color:', style: TextstyleConstants.buttonText),
+              Text(
+                StringConstants.addCategoryPageSubTitle3,
+                style: TextstyleConstants.buttonText,
+              ),
               SizedBox(height: 10),
               SizedBox(
                 height: 35,
@@ -130,7 +133,7 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
                     onPressed: () => Navigator.pop(context),
                   ),
                   DialogButton(
-                    label: 'Create Category',
+                    label: StringConstants.addCategoryLabel2,
                     onPressed: onCreateCategoryPressed,
                   ),
                 ],

@@ -39,7 +39,7 @@ class _TaskListTileState extends State<TaskListTile> {
         contentPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
         titleAlignment: ListTileTitleAlignment.center,
 
-        leading: TaskRadioButton(taskId: task.id, groupValue: task.isComplete),
+        leading: TaskRadioButton(taskId: task.id),
 
         title: Text(task.title, style: TextstyleConstants.onboardingSubTitle),
 

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
+import 'package:todo_app/constants/app_router_constants.dart';
 import 'package:todo_app/constants/theme_constants.dart';
+import 'package:todo_app/controllers/category_controller.dart';
 import 'package:todo_app/models/category_model.dart';
 
 class CategoryGridView extends StatefulWidget {
@@ -17,37 +20,42 @@ class CategoryGridView extends StatefulWidget {
 }
 
 class _CategoryGridViewState extends State<CategoryGridView> {
+  final CategoryController categoryController = Get.find<CategoryController>();
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: Hive.box<CategoryModel>('categories').listenable(),
-      builder: (context, categories, child) {
-        final categoryList = categories.values.toList();
-        return GridView.builder(
-          itemCount: categoryList.length,
-          shrinkWrap: true,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
-          ),
-          itemBuilder: (context, index) {
-            final category = categoryList[index];
-            return GestureDetector(
-              onTap: () {
-                setState(() {
-                  widget.onChanged(index);
-                });
-              },
-              child: CategoryGridItem(
-                category: category,
-                isSelected: widget.selectedCategoryIndex == index,
-              ),
-            );
-          },
-        );
-      },
-    );
+    return Obx(() {
+      return GridView.builder(
+        itemCount: categoryController.categories.length + 1,
+        shrinkWrap: true,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+        ),
+        itemBuilder: (context, index) {
+          return (index != categoryController.categories.length)
+              ? GestureDetector(
+                  onTap: () => widget.onChanged(index),
+                  child: CategoryGridItem(
+                    category: categoryController.categories[index],
+                    isSelected: widget.selectedCategoryIndex == index,
+                  ),
+                )
+              : GestureDetector(
+                  onTap: () =>
+                      context.pushNamed(AppRouterConstants.addCategory),
+                  child: CategoryGridItem(
+                    category: CategoryModel(
+                      name: 'Add new',
+                      iconCodePoint: Icons.add_rounded.codePoint,
+                      colorValue: ColorConstants.purple.value,
+                    ),
+                    isSelected: true,
+                  ),
+                );
+        },
+      );
+    });
   }
 }
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/constants/string_constants.dart';
 import 'package:todo_app/constants/theme_constants.dart';
+import 'package:todo_app/utils/dialogs/edit_dialog.dart';
 import 'package:todo_app/utils/image_methods.dart';
 import 'package:todo_app/widgets/custom_text_field.dart';
-import 'package:todo_app/widgets/edit_dialog.dart';
 
 Future<void> showEditNameDialog(BuildContext context) async {
   final nameController = TextEditingController();

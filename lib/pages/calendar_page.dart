@@ -14,77 +14,72 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> {
-  DateTime selectedDateTime = DateTime.now();
-  bool showCompleted = false;
   final TaskController taskController = Get.find<TaskController>();
+
+  void onDateChanged(DateTime date) {
+    taskController.filterTasksByDateAndCompletion(
+      selectedDateTime: date,
+      showCompleted: taskController.showCalendarCompleted.value,
+    );
+  }
+
+  void onToggle(bool val) {
+    taskController.filterTasksByDateAndCompletion(
+      selectedDateTime: taskController.selectedCalendarDateTime.value,
+      showCompleted: val,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final tasks = taskController.tasks.values;
-    final filteredTasks = tasks.where((task) {
-      final isSameDate =
-          task.date.year == selectedDateTime.year &&
-          task.date.month == selectedDateTime.month &&
-          task.date.day == selectedDateTime.day;
+    final filteredTasks = taskController.calendarFilteredTasks;
 
-      final isCompletedMatch = showCompleted
-          ? task.isComplete
-          : !task.isComplete;
+    return Obx(() {
+      return SingleChildScrollView(
+        child: Column(
+          spacing: 20,
+          children: [
+            DayWiseTimeline(
+              selectedDateTime: taskController.selectedCalendarDateTime.value,
+              onDateChanged: (date) => onDateChanged(date),
+            ),
 
-      return isSameDate && isCompletedMatch;
-    }).toList();
-    return Column(
-      spacing: 20,
-      children: [
-        DayWiseTimeline(
-          selectedDateTime: selectedDateTime,
-          onDateChanged: (date) {
-            setState(() {
-              selectedDateTime = date;
-            });
-          },
-        ),
+            CalendarToggleButton(
+              showCompleted: taskController.showCalendarCompleted.value,
+              onToggle: (val) => onToggle(val),
+            ),
 
-        CalendarToggleButton(
-          showCompleted: showCompleted,
-          onToggle: (val) {
-            setState(() {
-              showCompleted = val;
-            });
-          },
-        ),
-
-        Obx(
-          () => filteredTasks.isEmpty
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    SizedBox(height: 50),
-                    Icon(Icons.task_alt_rounded, color: Colors.white, size: 60),
-                    Text(
-                      'No Tasks Found',
-                      style: TextstyleConstants.homePlaceHolderTitle,
+            filteredTasks.isEmpty
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      SizedBox(height: 50),
+                      Icon(Icons.task_alt_rounded, size: 60),
+                      Text(
+                        'No Tasks Found',
+                        style: TextstyleConstants.homePlaceHolderTitle,
+                      ),
+                    ],
+                  )
+                : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: ListView.separated(
+                      itemCount: filteredTasks.length,
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (context, index) {
+                        return TaskListTile(taskId: filteredTasks[index].id);
+                      },
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 10),
                     ),
-                  ],
-                )
-              : Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: ListView.separated(
-                    itemCount: filteredTasks.length,
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (context, index) {
-                      return TaskListTile(taskId: filteredTasks[index].id);
-                    },
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 10),
                   ),
-                ),
+          ],
         ),
-      ],
-    );
+      );
+    });
   }
 }

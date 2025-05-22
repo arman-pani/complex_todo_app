@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo_app/constants/app_router_constants.dart';
 import 'package:todo_app/constants/string_constants.dart';
 import 'package:todo_app/constants/theme_constants.dart';
+import 'package:todo_app/controllers/category_controller.dart';
 import 'package:todo_app/controllers/task_controller.dart';
 import 'package:todo_app/models/task_model.dart';
-import 'package:todo_app/utils/category_methods.dart';
+import 'package:todo_app/utils/dialogs/edit_dialog.dart';
 import 'package:todo_app/widgets/category_gridview.dart';
 import 'package:todo_app/widgets/custom_text_field.dart';
 import 'package:todo_app/widgets/dialog_button.dart';
-import 'package:todo_app/widgets/edit_dialog.dart';
 import 'package:todo_app/widgets/task_priority_gridview.dart';
 
 class TaskEditDialogs {
   TaskController taskController;
   TaskEditDialogs(this.taskController);
+
+  final CategoryController categoryController = Get.find<CategoryController>();
 
   Future<void> showEditTaskTitleDescriptionDialog(
     BuildContext context,
@@ -51,10 +54,10 @@ class TaskEditDialogs {
 
   Future<void> showEditTaskCategoryDialog(
     BuildContext context,
-
     TaskModel oldTask,
   ) async {
     int selectedCategoryIndex = 0;
+
     await showEditDialog(
       context: context,
       items: [
@@ -74,7 +77,7 @@ class TaskEditDialogs {
       title: StringConstants.editTaskDialogTitle2,
       onEditPressed: () => taskController.updateTask(
         oldTask.copyWith(
-          category: CategoryMethods().getAllCategories()[selectedCategoryIndex],
+          category: categoryController.categories[selectedCategoryIndex],
         ),
       ),
     );

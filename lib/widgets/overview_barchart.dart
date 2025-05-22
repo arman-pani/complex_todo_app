@@ -1,7 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/constants/theme_constants.dart';
-import 'package:todo_app/widgets/filter_drop_down_button.dart';
 
 class WeeklyBarChart extends StatelessWidget {
   const WeeklyBarChart({super.key});
@@ -16,7 +15,7 @@ class WeeklyBarChart extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('Overview', style: TextstyleConstants.homePlaceHolderTitle),
-            FilterDropDownButton(label: 'This Week'),
+            // FilterDropDownButton(label: 'This Week'),
           ],
         ),
         Container(

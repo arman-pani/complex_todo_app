@@ -54,11 +54,7 @@ class _DayWiseTimelineState extends State<DayWiseTimeline> {
               children: [
                 IconButton(
                   onPressed: onTap,
-                  icon: Icon(
-                    Icons.arrow_back_ios_rounded,
-                    size: 16,
-                    color: Colors.white,
-                  ),
+                  icon: Icon(Icons.arrow_back_ios_rounded, size: 16),
                 ),
                 Column(
                   children: [
@@ -76,11 +72,7 @@ class _DayWiseTimelineState extends State<DayWiseTimeline> {
                 ),
                 IconButton(
                   onPressed: () {},
-                  icon: Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    size: 16,
-                    color: Colors.white,
-                  ),
+                  icon: Icon(Icons.arrow_forward_ios_rounded, size: 16),
                 ),
               ],
             );

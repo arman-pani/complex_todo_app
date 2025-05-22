@@ -8,7 +8,7 @@ String formatDateTimetoString(DateTime dateTime) {
 String formatTimeOfDayToString(TimeOfDay time) {
   final now = DateTime.now();
   final dt = DateTime(now.year, now.month, now.day, time.hour, time.minute);
-  return DateFormat('h a').format(dt);
+  return DateFormat('hh:mm a').format(dt);
 }
 
 String formatTaskDateTime(DateTime date, TimeOfDay time) {

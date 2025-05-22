@@ -2,11 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:todo_app/constants/theme_constants.dart';
 
 class CustomSearchBar extends StatelessWidget {
-  const CustomSearchBar({super.key});
+  final TextEditingController textInputController;
+  final ValueChanged<String> onChanged;
+  const CustomSearchBar({
+    super.key,
+    required this.textInputController,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      onChanged: (value) => onChanged(value),
+      controller: textInputController,
       cursorColor: Colors.white,
       style: TextstyleConstants.hintText.copyWith(color: Colors.white),
       decoration: InputDecoration(

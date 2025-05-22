@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:todo_app/constants/theme_constants.dart';
+import 'package:todo_app/controllers/category_controller.dart';
 import 'package:todo_app/controllers/task_controller.dart';
 import 'package:todo_app/models/task_model.dart';
-import 'package:todo_app/utils/category_dialog.dart';
-import 'package:todo_app/utils/category_methods.dart';
-import 'package:todo_app/utils/task_priority_dialog.dart';
+import 'package:todo_app/utils/dialogs/task_add_dialogs.dart';
+import 'package:todo_app/utils/helpers.dart';
+import 'package:todo_app/utils/show_snackbar.dart';
 import 'package:todo_app/widgets/custom_text_field2.dart';
 
 Future<void> showAddTaskModalSheet(BuildContext context) async {
   final TaskController taskController = Get.find<TaskController>();
+  final CategoryController categoryController = Get.find<CategoryController>();
+
   final taskTextController = TextEditingController();
   final descriptionController = TextEditingController();
   DateTime selectedDate = DateTime.now();
@@ -17,36 +20,25 @@ Future<void> showAddTaskModalSheet(BuildContext context) async {
   int selectedPriority = 1;
   int selectedCategory = 0;
 
-  selectDate(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2030),
-    );
-    if (pickedDate != null && pickedDate != selectedDate) {
-      selectedDate = pickedDate;
-      final TimeOfDay? pickedTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
-      );
-      if (pickedTime != null && pickedTime != selectedTime) {
-        selectedTime = pickedTime;
-      }
-    }
-  }
+  TaskAddDialogs taskAddDialogs = TaskAddDialogs(taskController);
 
   void saveTaskButton() {
-    final newTask = TaskModel(
-      title: taskTextController.text.trim(),
-      description: descriptionController.text.trim(),
-      date: selectedDate,
-      time: selectedTime,
-      priority: selectedPriority,
-      category: CategoryMethods().getAllCategories()[selectedCategory],
-    );
-    taskController.addTask(newTask);
-    Navigator.pop(context);
+    final title = taskTextController.text.trim();
+    if (title != "") {
+      final newTask = TaskModel(
+        title: title,
+        description: descriptionController.text.trim(),
+        date: selectedDate,
+        time: selectedTime,
+        priority: selectedPriority,
+        category: categoryController.categories[selectedCategory],
+      );
+      taskController.addTask(newTask);
+      Navigator.pop(context);
+      showSnackBar(context, 'New Task Added');
+    } else {
+      showSnackBar(context, 'Task field is empty!');
+    }
   }
 
   await showModalBottomSheet(
@@ -54,74 +46,140 @@ Future<void> showAddTaskModalSheet(BuildContext context) async {
     backgroundColor: ColorConstants.appBarBgColor,
     isScrollControlled: true,
     builder: (context) {
-      return Padding(
-        padding: EdgeInsets.only(
-          left: 20,
-          right: 20,
-          top: 20,
-          bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
+      return StatefulBuilder(
+        builder: (context, setState) {
+          void onPriorityPressed() async {
+            final result = await taskAddDialogs.showTaskPriorityDialog(
+              context,
+              selectedPriority,
+            );
+            setState(() {
+              selectedPriority = result;
+            });
+          }
+
+          void onCategoryPressed() async {
+            final result = await taskAddDialogs.showCategoryDialog(
+              context,
+              selectedCategory,
+            );
+            setState(() {
+              selectedCategory = result;
+            });
+          }
+
+          void selectDate(
+            BuildContext context,
+            void Function(void Function()) setState,
+          ) async {
+            final DateTime? pickedDate = await showDatePicker(
+              context: context,
+              initialDate: selectedDate,
+              firstDate: DateTime.now(),
+              lastDate: DateTime(2030),
+            );
+            if (pickedDate != null && pickedDate != selectedDate) {
+              setState(() {
+                selectedDate = pickedDate;
+              });
+            }
+            final TimeOfDay? pickedTime = await showTimePicker(
+              context: context,
+              initialTime: TimeOfDay.now(),
+            );
+            if (pickedTime != null && pickedTime != selectedTime) {
+              setState(() {
+                selectedTime = pickedTime;
+              });
+            }
+          }
+
+          return Padding(
+            padding: EdgeInsets.only(
+              left: 20,
+              right: 20,
+              top: 20,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    'Add Task',
-                    style: TextstyleConstants.homePlaceHolderTitle,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Add Task',
+                        style: TextstyleConstants.homePlaceHolderTitle,
+                      ),
+                      Text(
+                        '${formatDateTimetoString(selectedDate)}, ${formatTimeOfDayToString(selectedTime)}',
+                        style: TextstyleConstants.onboardingSubTitle,
+                      ),
+                    ],
                   ),
-                  // Spacer(),
-                  // Text(
-                  //   '${formatDateTimetoString(selectedDate)}, ${formatTimeOfDayToString(selectedTime)}',
-                  //   style: TextstyleConstants.homePlaceHolderTitle,
-                  // ),
+                  CustomTextField2(
+                    hintText: 'Task',
+                    controller: taskTextController,
+                  ),
+                  CustomTextField2(
+                    hintText: 'Description',
+                    controller: descriptionController,
+                  ),
+
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () => selectDate(context, setState),
+                        icon: Icon(Icons.timer_outlined),
+                      ),
+                      IconButton(
+                        onPressed: onCategoryPressed,
+                        icon: Row(
+                          spacing: 3,
+                          children: [
+                            Icon(
+                              categoryController
+                                  .categories[selectedCategory]
+                                  .icon,
+                            ),
+                            Text(
+                              style: TextstyleConstants.underText,
+                              categoryController
+                                  .categories[selectedCategory]
+                                  .name,
+                            ),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: onPriorityPressed,
+                        icon: Row(
+                          spacing: 3,
+                          children: [
+                            Icon(Icons.flag_outlined),
+                            Text(
+                              style: TextstyleConstants.underText,
+                              selectedPriority.toString(),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Spacer(),
+                      IconButton(
+                        onPressed: saveTaskButton,
+                        icon: Icon(Icons.arrow_forward_ios_rounded),
+                        color: ColorConstants.purple,
+                      ),
+                    ],
+                  ),
                 ],
               ),
-              CustomTextField2(
-                hintText: 'Task',
-                controller: taskTextController,
-              ),
-              CustomTextField2(
-                hintText: 'Description',
-                controller: descriptionController,
-              ),
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      selectDate(context);
-                    },
-                    icon: Icon(Icons.timer_outlined),
-                    color: Colors.white,
-                  ),
-                  IconButton(
-                    onPressed: () async {
-                      selectedCategory = await showCategoryDialog(context);
-                    },
-                    icon: Icon(Icons.category_rounded),
-                    color: Colors.white,
-                  ),
-                  IconButton(
-                    onPressed: () async {
-                      selectedPriority = await showTaskPriorityDialog(context);
-                    },
-                    icon: Icon(Icons.flag_outlined),
-                    color: Colors.white,
-                  ),
-                  Spacer(),
-                  IconButton(
-                    onPressed: saveTaskButton,
-                    icon: Icon(Icons.arrow_forward_ios_rounded),
-                    color: ColorConstants.purple,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       );
     },
   );

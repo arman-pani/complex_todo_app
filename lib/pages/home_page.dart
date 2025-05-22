@@ -17,57 +17,81 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final TextEditingController textInputController = TextEditingController();
   final TaskController taskController = Get.find<TaskController>();
+
+  void onFilterButtonChanged(FilterLabel value) {
+    taskController.filterTaskInHomePage(
+      label: value,
+      searchInput: textInputController.text.trim(),
+    );
+  }
+
+  void onSearchBarChanged(String value) {
+    taskController.filterTaskInHomePage(
+      label: taskController.currentFilterLabel.value,
+      searchInput: value,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final tasks = taskController.tasks.values;
+    final tasks = taskController.homeFilteredTasks;
+    debugPrint(tasks.toList().toString());
     return Obx(
-      () => tasks.isEmpty
-          ? Column(
-              children: [
-                Spacer(flex: 5),
-                SvgPicture.asset(
-                  ImageConstants.homePlaceholder,
-                  height: 250,
-                  width: 250,
-                ),
-                Spacer(flex: 2),
-                Text(
-                  StringConstants.homePlaceHolderTitle,
-                  style: TextstyleConstants.homePlaceHolderTitle,
-                ),
-                Spacer(flex: 1),
-                Text(
-                  StringConstants.homePlaceHolderSubTitle,
-                  style: TextstyleConstants.onboardingSubTitle,
-                ),
-                Spacer(flex: 12),
-              ],
-            )
-          : Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 10,
-                children: [
-                  CustomSearchBar(),
-                  FilterDropDownButton(label: 'Today'),
-                  ListView.separated(
-                    physics: NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: tasks.length,
-                    itemBuilder: (context, index) {
-                      final task = tasks.toList()[index];
-                      return TaskListTile(taskId: task.id);
-                    },
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 10),
-                  ),
-                ],
+      () => SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 10,
+            children: [
+              CustomSearchBar(
+                textInputController: textInputController,
+                onChanged: (value) => onSearchBarChanged(value),
               ),
-            ),
+              FilterDropDownButton(
+                initialLabel: taskController.currentFilterLabel.value,
+                onChanged: (value) => onFilterButtonChanged(value),
+              ),
+
+              tasks.isEmpty
+                  ? Center(
+                      child: Column(
+                        children: [
+                          SvgPicture.asset(
+                            ImageConstants.homePlaceholder,
+                            height: 250,
+                            width: 250,
+                          ),
+                          Text(
+                            StringConstants.homePlaceHolderTitle,
+                            style: TextstyleConstants.homePlaceHolderTitle,
+                          ),
+                          Text(
+                            StringConstants.homePlaceHolderSubTitle,
+                            style: TextstyleConstants.onboardingSubTitle,
+                          ),
+                        ],
+                      ),
+                    )
+                  : ListView.separated(
+                      physics: NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: tasks.length,
+                      itemBuilder: (context, index) {
+                        final task = tasks.toList()[index];
+                        debugPrint("Taskid: ${task.id}");
+                        return TaskListTile(taskId: task.id);
+                      },
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 10),
+                    ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

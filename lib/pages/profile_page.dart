@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:todo_app/constants/app_router_constants.dart';
 import 'package:todo_app/constants/string_constants.dart';
 import 'package:todo_app/constants/theme_constants.dart';
+import 'package:todo_app/utils/dialogs/profile_edit_dialogs.dart';
 import 'package:todo_app/utils/prefs_methods.dart';
-import 'package:todo_app/utils/profile_edit_dialogs.dart';
 import 'package:todo_app/widgets/listtile_textbutton.dart';
 
 class ProfilePage extends StatefulWidget {
