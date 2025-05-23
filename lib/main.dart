@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:todo_app/controllers/auth_controller.dart';
 import 'package:todo_app/controllers/category_controller.dart';
+import 'package:todo_app/controllers/task_add_controller.dart';
 import 'package:todo_app/controllers/task_controller.dart';
 import 'package:todo_app/models/category_model.dart';
 import 'package:todo_app/models/task_model.dart';
@@ -71,6 +73,8 @@ class MyApp extends StatelessWidget {
       initialBinding: BindingsBuilder(() {
         Get.put(TaskController(taskBox));
         Get.put(CategoryController(categoryBox));
+        Get.put(TaskAddController());
+        Get.put(AuthController());
       }),
     );
   }

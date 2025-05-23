@@ -11,44 +11,54 @@ import 'package:todo_app/widgets/custom_app_bar.dart';
 import 'package:todo_app/widgets/custom_text_button2.dart';
 import 'package:todo_app/widgets/custom_text_field.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatelessWidget {
+  const RegisterPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AuthController>(
-      builder: (controller) {
-        return Scaffold(
-          resizeToAvoidBottomInset: false,
-          appBar: customAppBar(context),
-          body: Padding(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: customAppBar(context),
+      body: GetBuilder<AuthController>(
+        builder: (controller) {
+          return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Spacer(),
                 Text(
-                  StringConstants.loginTitle,
+                  StringConstants.registerTitle,
                   style: TextstyleConstants.onboardingTitle,
                 ),
                 Spacer(flex: 2),
+
                 CustomTextField(
                   controller: controller.usernameController,
                   hintText: StringConstants.userNameHint,
                   labelText: StringConstants.userNameLabel,
                 ),
                 Spacer(),
+
                 CustomTextField(
                   isPassword: true,
                   controller: controller.passwordController,
                   hintText: StringConstants.passwordHint,
                   labelText: StringConstants.passwordLabel,
                 ),
+                Spacer(),
+
+                CustomTextField(
+                  isPassword: true,
+                  controller: controller.confirmPasswordController,
+                  hintText: StringConstants.confirmPasswordHint,
+                  labelText: StringConstants.confirmPasswordLabel,
+                ),
                 Spacer(flex: 2),
 
                 CustomTextButton2(
-                  label: StringConstants.loginTitle,
-                  onPressed: () => controller.loginUser(context: context),
+                  label: StringConstants.registerTitle,
+                  onPressed: () => controller.registerUser(context: context),
                 ),
                 Spacer(),
 
@@ -56,7 +66,7 @@ class LoginPage extends StatelessWidget {
                 Spacer(),
 
                 CustomTextButton2(
-                  label: StringConstants.loginGoogleButton,
+                  label: StringConstants.registerGoogleButton,
                   iconPath: IconConstants.google,
                   isBlack: true,
                   onPressed: () {},
@@ -64,7 +74,7 @@ class LoginPage extends StatelessWidget {
                 Spacer(),
 
                 CustomTextButton2(
-                  label: StringConstants.loginAppleButton,
+                  label: StringConstants.registerAppleButton,
                   iconPath: IconConstants.apple,
                   isBlack: true,
                   onPressed: () {},
@@ -74,17 +84,17 @@ class LoginPage extends StatelessWidget {
                 Center(
                   child: RichText(
                     text: TextSpan(
-                      text: StringConstants.loginUnderText,
+                      text: StringConstants.registerUnderText,
                       style: TextstyleConstants.underText.copyWith(
                         color: ColorConstants.grey1,
                       ),
                       children: [
                         TextSpan(
-                          text: StringConstants.registerTitle,
+                          text: StringConstants.loginTitle,
                           style: TextstyleConstants.underText,
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              context.goNamed(AppRouterConstants.register);
+                              context.goNamed(AppRouterConstants.login);
                             },
                         ),
                       ],
@@ -94,9 +104,9 @@ class LoginPage extends StatelessWidget {
                 Spacer(),
               ],
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

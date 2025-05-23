@@ -9,15 +9,11 @@ import 'package:todo_app/widgets/filter_drop_down_button.dart';
 import 'package:todo_app/widgets/search_bar.dart';
 import 'package:todo_app/widgets/task_list_tile.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomePage extends StatelessWidget {
+  HomePage({super.key});
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
   final TextEditingController textInputController = TextEditingController();
+
   final TaskController taskController = Get.find<TaskController>();
 
   void onFilterButtonChanged(FilterLabel value) {

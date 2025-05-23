@@ -6,7 +6,7 @@ import 'package:todo_app/constants/theme_constants.dart';
 import 'package:todo_app/controllers/category_controller.dart';
 import 'package:todo_app/models/category_model.dart';
 
-class CategoryGridView extends StatefulWidget {
+class CategoryGridView extends StatelessWidget {
   final int selectedCategoryIndex;
   final ValueChanged<int> onChanged;
   const CategoryGridView({
@@ -16,46 +16,42 @@ class CategoryGridView extends StatefulWidget {
   });
 
   @override
-  State<CategoryGridView> createState() => _CategoryGridViewState();
-}
-
-class _CategoryGridViewState extends State<CategoryGridView> {
-  final CategoryController categoryController = Get.find<CategoryController>();
-  @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      return GridView.builder(
-        itemCount: categoryController.categories.length + 1,
-        shrinkWrap: true,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 10,
-        ),
-        itemBuilder: (context, index) {
-          return (index != categoryController.categories.length)
-              ? GestureDetector(
-                  onTap: () => widget.onChanged(index),
-                  child: CategoryGridItem(
-                    category: categoryController.categories[index],
-                    isSelected: widget.selectedCategoryIndex == index,
-                  ),
-                )
-              : GestureDetector(
-                  onTap: () =>
-                      context.pushNamed(AppRouterConstants.addCategory),
-                  child: CategoryGridItem(
-                    category: CategoryModel(
-                      name: 'Add new',
-                      iconCodePoint: Icons.add_rounded.codePoint,
-                      colorValue: ColorConstants.purple.value,
+    return GetBuilder<CategoryController>(
+      builder: (controller) {
+        return GridView.builder(
+          itemCount: controller.categories.length + 1,
+          shrinkWrap: true,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+          ),
+          itemBuilder: (context, index) {
+            return (index != controller.categories.length)
+                ? GestureDetector(
+                    onTap: () => onChanged(index),
+                    child: CategoryGridItem(
+                      category: controller.categories[index],
+                      isSelected: selectedCategoryIndex == index,
                     ),
-                    isSelected: true,
-                  ),
-                );
-        },
-      );
-    });
+                  )
+                : GestureDetector(
+                    onTap: () =>
+                        context.pushNamed(AppRouterConstants.addCategory),
+                    child: CategoryGridItem(
+                      category: CategoryModel(
+                        name: 'Add new',
+                        iconCodePoint: Icons.add_rounded.codePoint,
+                        colorValue: ColorConstants.purple.value,
+                      ),
+                      isSelected: true,
+                    ),
+                  );
+          },
+        );
+      },
+    );
   }
 }
 

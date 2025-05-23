@@ -9,6 +9,7 @@ import 'package:todo_app/pages/index_page.dart';
 import 'package:todo_app/pages/login_page.dart';
 import 'package:todo_app/pages/onboarding_page.dart';
 import 'package:todo_app/pages/profile_page.dart';
+import 'package:todo_app/pages/register_page.dart';
 import 'package:todo_app/pages/settings_page.dart';
 import 'package:todo_app/pages/splash_page.dart';
 import 'package:todo_app/pages/start_page.dart';
@@ -39,6 +40,12 @@ GoRouter appRouter({required String initialLocation}) {
         name: AppRouterConstants.start,
         builder: (context, state) => const StartPage(),
         routes: [],
+      ),
+
+      GoRoute(
+        path: '/register',
+        name: AppRouterConstants.register,
+        builder: (context, state) => const RegisterPage(),
       ),
       GoRoute(
         path: '/login',
@@ -78,7 +85,7 @@ GoRouter appRouter({required String initialLocation}) {
               GoRoute(
                 path: '/home',
                 name: AppRouterConstants.home,
-                builder: (context, state) => const HomePage(),
+                builder: (context, state) => HomePage(),
               ),
             ],
           ),
@@ -88,7 +95,7 @@ GoRouter appRouter({required String initialLocation}) {
               GoRoute(
                 path: '/calendar',
                 name: AppRouterConstants.calendar,
-                builder: (context, state) => const CalendarPage(),
+                builder: (context, state) => CalendarPage(),
               ),
             ],
           ),

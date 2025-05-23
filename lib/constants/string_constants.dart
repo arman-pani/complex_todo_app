@@ -16,9 +16,18 @@ class StringConstants {
   static const String passwordLabel = 'Password';
   static const String passwordHint = 'Enter your Password';
 
+  static const String confirmPasswordLabel = 'Confirm Password';
+  static const String confirmPasswordHint = 'Enter your Password again';
+
+  static const String registerTitle = 'Register';
+  static const String registerGoogleButton = 'Register with Google';
+  static const String registerAppleButton = 'Register with Apple';
+  static const String registerUnderText = "Already have an account? ";
+
   static const String loginTitle = 'Login';
   static const String loginGoogleButton = 'Login with Google';
   static const String loginAppleButton = 'Login with Apple';
+  static const String loginUnderText = "Don't have an account? ";
 
   static const String homePlaceHolderTitle = 'What do you want to do today?';
 

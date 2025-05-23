@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo_app/constants/app_router_constants.dart';
 import 'package:todo_app/constants/string_constants.dart';
 import 'package:todo_app/constants/theme_constants.dart';
+import 'package:todo_app/controllers/auth_controller.dart';
+import 'package:todo_app/controllers/task_controller.dart';
 import 'package:todo_app/utils/dialogs/profile_edit_dialogs.dart';
-import 'package:todo_app/utils/prefs_methods.dart';
 import 'package:todo_app/widgets/listtile_textbutton.dart';
 
-class ProfilePage extends StatefulWidget {
+class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
-  @override
-  State<ProfilePage> createState() => _ProfilePageState();
-}
-
-class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -25,20 +22,31 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             CircleAvatar(
               radius: 50,
-
               backgroundImage: NetworkImage(
                 'https://picsum.photos/id/237/200/300',
               ),
             ),
-            Text('Martha Hays', style: TextstyleConstants.homePlaceHolderTitle),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                taskInfoContainer('10 Task left'),
-                SizedBox(width: 15),
-                taskInfoContainer('5 Task done'),
-              ],
+            GetBuilder<AuthController>(
+              builder: (controller) {
+                return Text(
+                  controller.user.username,
+                  style: TextstyleConstants.homePlaceHolderTitle,
+                );
+              },
             ),
+            Obx(() {
+              final TaskController controller = Get.find<TaskController>();
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  taskInfoContainer('${controller.pendingTaskCount} Task left'),
+                  SizedBox(width: 15),
+                  taskInfoContainer(
+                    '${controller.completedTaskCount} Task done',
+                  ),
+                ],
+              );
+            }),
 
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,13 +107,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   label: StringConstants.profileLabel8,
                   onTap: () {},
                 ),
-                ListTileTextButton(
-                  color: Colors.red,
-                  icon: Icons.logout_outlined,
-                  label: StringConstants.profileLabel9,
-                  onTap: () async {
-                    await SharedPrefsMethods.removeIsLogin();
-                    context.goNamed(AppRouterConstants.login);
+                GetBuilder<AuthController>(
+                  builder: (controller) {
+                    return ListTileTextButton(
+                      color: Colors.red,
+                      icon: Icons.logout_outlined,
+                      label: StringConstants.profileLabel9,
+                      onTap: () => controller.logoutUser(context),
+                    );
                   },
                 ),
               ],

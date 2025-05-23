@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/constants/theme_constants.dart';
 
-class TaskPriorityGridview extends StatefulWidget {
+class TaskPriorityGridview extends StatelessWidget {
   final int selectedPriority;
   final ValueChanged<int> onChanged;
   const TaskPriorityGridview({
@@ -10,11 +10,6 @@ class TaskPriorityGridview extends StatefulWidget {
     required this.onChanged,
   });
 
-  @override
-  State<TaskPriorityGridview> createState() => _TaskPriorityGridviewState();
-}
-
-class _TaskPriorityGridviewState extends State<TaskPriorityGridview> {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
@@ -26,13 +21,9 @@ class _TaskPriorityGridviewState extends State<TaskPriorityGridview> {
         crossAxisSpacing: 10,
       ),
       itemBuilder: (context, index) {
-        final isSelected = (index + 1) == widget.selectedPriority;
+        final isSelected = (index + 1) == selectedPriority;
         return GestureDetector(
-          onTap: () {
-            setState(() {
-              widget.onChanged(index + 1);
-            });
-          },
+          onTap: () => onChanged(index + 1),
           child: Container(
             height: 65,
             width: 65,

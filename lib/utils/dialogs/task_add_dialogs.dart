@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:todo_app/controllers/task_controller.dart';
 import 'package:todo_app/utils/dialogs/add_dialog.dart';
 import 'package:todo_app/widgets/category_gridview.dart';
 import 'package:todo_app/widgets/task_priority_gridview.dart';
 
 class TaskAddDialogs {
-  TaskController taskController;
-  TaskAddDialogs(this.taskController);
-
   Future<int> showTaskPriorityDialog(
     BuildContext context,
     int selectedPriority,

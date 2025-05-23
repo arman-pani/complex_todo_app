@@ -20,6 +20,12 @@ class TaskController extends GetxController {
 
   final Box<TaskModel> _taskBox;
 
+  int get pendingTaskCount =>
+      tasks.values.where((task) => !task.isComplete).length;
+
+  int get completedTaskCount =>
+      tasks.values.where((task) => task.isComplete).length;
+
   TaskController(this._taskBox);
 
   @override
@@ -76,6 +82,10 @@ class TaskController extends GetxController {
     final String taskTitle = _taskBox.get(taskId)!.title;
     tasks.remove(taskId);
     _taskBox.delete(taskId);
+
+    filterTaskInHomePage();
+    filterTasksByDateAndCompletion();
+
     Get.snackbar('Deleted', 'Task "$taskTitle" removed.');
   }
 

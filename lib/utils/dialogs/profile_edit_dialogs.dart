@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/instance_manager.dart';
 import 'package:todo_app/constants/string_constants.dart';
 import 'package:todo_app/constants/theme_constants.dart';
+import 'package:todo_app/controllers/auth_controller.dart';
 import 'package:todo_app/utils/dialogs/edit_dialog.dart';
 import 'package:todo_app/utils/image_methods.dart';
 import 'package:todo_app/widgets/custom_text_field.dart';
 
 Future<void> showEditNameDialog(BuildContext context) async {
   final nameController = TextEditingController();
+  final AuthController authController = Get.find<AuthController>();
+
   await showEditDialog(
     context: context,
     items: [
@@ -17,13 +21,16 @@ Future<void> showEditNameDialog(BuildContext context) async {
       ),
     ],
     title: StringConstants.profileLabel2,
-    onEditPressed: () {},
+    onEditPressed: () =>
+        authController.changeAccountName(context, nameController.text.trim()),
   );
 }
 
 Future<void> showEditPasswordDialog(BuildContext context) async {
   final oldPasswordController = TextEditingController();
   final newPasswordController = TextEditingController();
+
+  final AuthController authController = Get.find<AuthController>();
 
   await showEditDialog(
     context: context,
@@ -40,7 +47,11 @@ Future<void> showEditPasswordDialog(BuildContext context) async {
       ),
     ],
     title: StringConstants.profileLabel2,
-    onEditPressed: () {},
+    onEditPressed: () => authController.changeAccountPassword(
+      context,
+      newPasswordController.text.trim(),
+      oldPasswordController.text.trim(),
+    ),
   );
 }
 

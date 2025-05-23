@@ -2,21 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:todo_app/constants/theme_constants.dart';
 import 'package:todo_app/controllers/task_controller.dart';
-import 'package:todo_app/models/task_model.dart';
 import 'package:todo_app/utils/dialogs/task_edit_dialogs.dart';
 import 'package:todo_app/utils/helpers.dart';
 import 'package:todo_app/widgets/radio_button.dart';
 
-class TaskPage extends StatefulWidget {
+class TaskPage extends StatelessWidget {
   final String taskId;
-  const TaskPage({super.key, required this.taskId});
+  TaskPage({super.key, required this.taskId});
 
-  @override
-  State<TaskPage> createState() => _TaskPageState();
-}
-
-class _TaskPageState extends State<TaskPage> {
-  late TaskModel task;
   final TaskController taskController = Get.find<TaskController>();
 
   @override
@@ -27,7 +20,7 @@ class _TaskPageState extends State<TaskPage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(),
           child: Obx(() {
-            task = taskController.tasks[widget.taskId]!;
+            final task = taskController.tasks[taskId]!;
             return Column(
               spacing: 20,
               children: [
@@ -49,7 +42,7 @@ class _TaskPageState extends State<TaskPage> {
 
                 ListTile(
                   titleAlignment: ListTileTitleAlignment.top,
-                  leading: TaskRadioButton(taskId: widget.taskId),
+                  leading: TaskRadioButton(taskId: taskId),
                   title: Text(
                     task.title,
                     style: TextstyleConstants.homePlaceHolderTitle,

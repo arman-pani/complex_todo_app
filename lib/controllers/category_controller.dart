@@ -3,7 +3,7 @@ import 'package:hive/hive.dart';
 import 'package:todo_app/models/category_model.dart';
 
 class CategoryController extends GetxController {
-  final RxList<CategoryModel> categories = <CategoryModel>[].obs;
+  List<CategoryModel> categories = <CategoryModel>[];
 
   final Box<CategoryModel> _categoryBox;
 
@@ -25,10 +25,12 @@ class CategoryController extends GetxController {
   void addCategory(CategoryModel newCategory) {
     categories.add(newCategory);
     _categoryBox.add(newCategory);
+    update();
   }
 
   void removeCategory(int index) {
     categories.removeAt(index);
     _categoryBox.deleteAt(index);
+    update();
   }
 }

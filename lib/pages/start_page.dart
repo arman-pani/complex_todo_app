@@ -38,7 +38,7 @@ class StartPage extends StatelessWidget {
             CustomTextButton2(
               label: 'CREATE ACCOUNT',
               isBlack: true,
-              onPressed: () {},
+              onPressed: () => context.pushNamed(AppRouterConstants.register),
             ),
             Spacer(flex: 2),
           ],

@@ -6,14 +6,9 @@ import 'package:todo_app/widgets/calendar_toggle_button.dart';
 import 'package:todo_app/widgets/day_wise_timeline.dart';
 import 'package:todo_app/widgets/task_list_tile.dart';
 
-class CalendarPage extends StatefulWidget {
-  const CalendarPage({super.key});
+class CalendarPage extends StatelessWidget {
+  CalendarPage({super.key});
 
-  @override
-  State<CalendarPage> createState() => _CalendarPageState();
-}
-
-class _CalendarPageState extends State<CalendarPage> {
   final TaskController taskController = Get.find<TaskController>();
 
   void onDateChanged(DateTime date) {
